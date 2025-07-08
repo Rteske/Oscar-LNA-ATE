@@ -56,9 +56,11 @@ class OscarLNAModuleGUI:
         self.checkbox1_var = tk.BooleanVar()
         self.checkbox2_var = tk.BooleanVar()
         self.checkbox3_var = tk.BooleanVar()
+        self.checkbox4_var = tk.BooleanVar()
         tk.Checkbutton(self.main_frame, text="VSWR GAIN AND PHASE", variable=self.checkbox1_var).pack(pady=5)
         tk.Checkbutton(self.main_frame, text="PSAT P1", variable=self.checkbox2_var).pack(pady=5)
         tk.Checkbutton(self.main_frame, text="NOISE FIGURE", variable=self.checkbox3_var).pack(pady=5)
+        tk.Checkbutton(self.main_frame, text= "Wideband", variable=self.checkbox4_var).pack(pady=5)
 
         # Status label
         self.status_label = tk.Label(self.main_frame, text="Status: Idle", fg="blue")

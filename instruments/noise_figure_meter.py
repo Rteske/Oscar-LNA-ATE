@@ -1,5 +1,7 @@
 import pyvisa
 import time
+import csv
+from datetime import datetime
 
 import pyvisa.constants
 
@@ -28,34 +30,42 @@ class NoiseFigure8970B:
     #     # 42.3 MIN FREQUENCY 42.4 MAX FREQUENCY in detected 
     #     # Actual instrument measurement range set thru FA FB
 
-    # def set_up(self):
-    #     # ENABLE 1.1 MODE FOR HIGHER FREQS
-    #     self._res.write("E1")
+    def set_up(self, start, stop, step, output_power):
+        # ENABLE 1.1 MODE FOR HIGHER FREQS
+        self._res.write("E1 EN")
+        time.sleep(.2)
 
-    #     # SET START [MN] AND STOP [MX]
-    #     self._res.write(f"MN {18000} EN")
-    #     self._res.write(f"MX {31000} EN")
+        # SET START [MN] AND STOP [MX]
+        self._res.write(f"MN {start} EN")
+        self._res.write(f"MX {stop} EN")
+        time.sleep(.2)
 
-    #     # SET 
-    #     self._res.write(f"FA {18000} EN")
-    #     self._res.write(f"FB {31000} EN")
+        # SET 
+        self._res.write(f"FA {start} EN")
+        self._res.write(f"FB {stop} EN")
+        time.sleep(.2)
 
-    #     # SET STEPSIZE 
-    #     self._res.write(f"SS {1000} EN")
+        # SET STEPSIZE 
+        self._res.write(f"SS {step} EN")
+        time.sleep(.2)
 
-    #     # SET INC [FN]
-    #     self._res.write(f"FN {1000} EN")
+        # SET INC [FN]
+        self._res.write(f"FN {step} EN")
+        time.sleep(.2)
 
-    #     # SELECT ENR TABLE
-    #     self._res.write("RC NR 1 EN NR")
+        # SELECT ENR TABLE
+        self._res.write("RC NR 1 EN NR")
+        time.sleep(.2)
 
-    #     # CAL
-    #     self._res.write(f"CA")
+        self._res.write(f"PL {output_power} EN")
 
+        # CAL
+        # self._res.write(f"CA EN")
+        # time.sleep(30)
+        # CORRETED VALUE [M2]
 
-
-    #     # CORRETED VALUE [M2]
-    #     self._res.write(f"M2")
+        # self._res.write(f"M2 EN")
+        # time.sleep(.2)
 
     def deassert_ren(self):
         print(self._res.lock_state)
@@ -64,11 +74,9 @@ class NoiseFigure8970B:
 
     def set_and_measure(self, freqs):
         bucket = []
-        res = self._res.query(f"M1")
-        print(res)
         for freq in freqs:
-            res = self._res.query(f"FR {freq} EN")
-            print(res)
+            self._res.write(f"FR {freq} EN")
+            self._res.write(f"T2 EN")
             time.sleep(2)
             noise_figure = self._res.query("MEASUREMENT")
             time.sleep(2)
@@ -103,30 +111,40 @@ class NoiseFigure8970B:
 if __name__ == "__main__":
     noise_figrue = NoiseFigure8970B(visa_address="GPIB0::8::INSTR")
 
-    noise_figures = noise_figrue.set_and_measure(18000, 32000)
-    print(noise_figures)
-    noise_figrue._res.close()
+    # start = 1900
+    # stop = 4000
+    # ss = 200
+    # output_power = 15
 
-    input_loss = [
-        -4.303,
-        -4.45,
-        -4.64,
-        -5.11,
-        -5.01,
-        -5.19,
-        -5.11,
-        -5.25,
-        -5.33,
-        -5.44,
-        -5.67,
-        -5.71,
-        -5.91,
-        -5.92
-    ]
+    # freqs = list(range(2000, 4200, 200))
+    # freqs = [1900] + freqs
+
+    start = 18000
+    stop = 31000
+    ss = 1000
+    output_power = 6
+
+    freqs = list(range(start, stop + ss, ss))
+
+    noise_figrue.set_up(start, stop, ss, output_power)
+
+    noise_figrue._res.write("M2 EN")
+
+        
+    noise_figures = noise_figrue.set_and_measure(freqs)
+    print(noise_figures)
+
+    filename = f"noise_figures_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    with open(filename, mode='w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['datetime', 'frequency', 'noise_figure'])
+        for freq, nf in noise_figures:
+            writer.writerow([datetime.now().isoformat(), freq, nf])
+    print(f"Noise figures saved to {filename}")
 
     for k, i in enumerate(noise_figures):
-        print("FUCK:", i[0], " SHIT:", i[1] + input_loss[k]) 
-
+        print("FREQ:", i[0], " NOISE FIG:", i[1]) 
+    
     # rm = pyvisa.ResourceManager()
     # resources = rm.list_resources()
     # print(resources)
