@@ -1,0 +1,21 @@
+Release Tag v2.2.1 Created
+===========================
+
+This file documents the creation of release tag v2.2.1 for the Oscar LNA ATE project.
+
+Tag Details:
+- Tag Name: v2.2.1
+- Commit SHA: a86fefa79e4e731b91421e15182f7ac786743d8a
+- Commit Message: "Initial plan"
+- Branch: copilot/fix-ebb290e9-8a02-4786-b16e-776fa27066d0
+- Created Date: Thu Jul 31 20:39:40 UTC 2025
+
+The git tag has been created locally and needs to be pushed to the remote repository.
+
+To push the tag to GitHub, run:
+git push origin v2.2.1
+
+Or push all tags:
+git push --tags origin
+
+This tag marks the current state of the codebase as version 2.2.1 release.
