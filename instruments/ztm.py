@@ -106,8 +106,8 @@ if __name__ == '__main__':
     ztm2.init_resource(sno2)
     ztm2.reset_all_switches()
 
-    ztm.set_all_switches([4,1,0,0,0,0])
-    ztm2.set_all_switches([0,1,2,4,4])
+    ztm.set_all_switches([2,3,3,2,0,0])
+    ztm2.set_all_switches([0,4,3,4,4])
 
     ztm.resource.Disconnect()
     ztm2.resource.Disconnect()

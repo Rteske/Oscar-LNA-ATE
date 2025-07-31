@@ -67,6 +67,69 @@ class NoiseFigure8970B:
         # self._res.write(f"M2 EN")
         # time.sleep(.2)
 
+    def get_noise_power_on_and_off_at_frequencies(self, freqs):
+        # H2 is the noise temperature and insertion gain
+
+        bucket = []
+        for freq in freqs:
+            self._res.write(f"FR {freq} EN")
+            self._res.write(f"T2 EN")
+            time.sleep(2)
+
+            source_off = self._res.query("N5 EN")
+            source_off = source_off.strip().split(",")[2]
+            time.sleep(.5)
+            source_on = self._res.query("N6 EN")
+            source_on = source_on.strip().split(",")[2]
+
+            bucket.append({"freq": float(freq), "source_on_noise_power": float(source_on), "source_off_noise_power": float(source_off)})
+
+        filename = f"noise_temp_insertion_gain_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        with open(filename, mode='w', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=['datetime', 'frequency',  "source_on_noise_power", "source_off_noise_power"])
+            writer.writeheader()
+            for entry in bucket:
+                writer.writerow({
+                    'datetime': datetime.now().isoformat(),
+                    'frequency': entry['freq'],
+                    'source_on_noise_power': entry['source_on_noise_power'],
+                    'source_off_noise_power': entry['source_off_noise_power']
+                })
+        print(f"Noise temperature and insertion gain saved to {filename}")
+    
+    def get_noise_temp_on_and_off_at_frequencies(self, freqs):
+        # H2 is the noise temperature and insertion gain
+
+        bucket = []
+        for freq in freqs:
+            self._res.write(f"FR {freq} EN")
+            self._res.write(f"T2 EN")
+            time.sleep(2)
+
+            self._res.write("N5 EN")
+            source_off = self._res.query("N4 EN")
+            source_off = source_off.strip().split(",")[2]
+            time.sleep(.5)
+            self._res.write("N6 EN")
+            source_on = self._res.query("N4 EN")
+            source_on = source_on.strip().split(",")[2]
+
+            bucket.append({"freq": float(freq), "source_on_noise_temp": float(source_on), "source_off_noise_temp": float(source_off)})
+
+        filename = f"noise_temp_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        with open(filename, mode='w', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=['datetime', 'frequency',"source_on_noise_temp", "source_off_noise_temp"])
+            writer.writeheader()
+            for entry in bucket:
+                writer.writerow({
+                    'datetime': datetime.now().isoformat(),
+                    'frequency': entry['freq'],
+                    'source_on_noise_temp': entry['source_on_noise_temp'],
+                    'source_off_noise_temp': entry['source_off_noise_temp']
+                })
+        print(f"Noise temperature and insertion gain saved to {filename}")
+
+
     def deassert_ren(self):
         print(self._res.lock_state)
 
@@ -111,39 +174,42 @@ class NoiseFigure8970B:
 if __name__ == "__main__":
     noise_figrue = NoiseFigure8970B(visa_address="GPIB0::8::INSTR")
 
-    # start = 1900
-    # stop = 4000
-    # ss = 200
-    # output_power = 15
-
-    # freqs = list(range(2000, 4200, 200))
-    # freqs = [1900] + freqs
-
-    start = 18000
-    stop = 31000
-    ss = 1000
-    output_power = 6
+    start = 2000
+    stop = 4000
+    ss = 200
+    output_power = 15
 
     freqs = list(range(start, stop + ss, ss))
+    freqs = [1900] + freqs
 
-    noise_figrue.set_up(start, stop, ss, output_power)
+    # start = 18000
+    # stop = 31000
+    # ss = 1000
+    # output_power = 6
 
-    noise_figrue._res.write("M2 EN")
+    # freqs = list(range(start, stop + ss, ss))
 
-        
-    noise_figures = noise_figrue.set_and_measure(freqs)
-    print(noise_figures)
+    noise_figrue.set_up(1900, stop + ss, ss, output_power)
 
-    filename = f"noise_figures_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
-    with open(filename, mode='w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['datetime', 'frequency', 'noise_figure'])
-        for freq, nf in noise_figures:
-            writer.writerow([datetime.now().isoformat(), freq, nf])
-    print(f"Noise figures saved to {filename}")
+    # noise_figrue.get_noise_power_on_and_off_at_frequencies(freqs)
 
-    for k, i in enumerate(noise_figures):
-        print("FREQ:", i[0], " NOISE FIG:", i[1]) 
+    noise_figrue.get_noise_temp_on_and_off_at_frequencies(freqs)
+
+    # save to a csv the noise figures
+
+    # noise_figures = noise_figrue.set_and_measure(freqs)
+    # print(noise_figures)
+
+    # filename = f"noise_figures_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    # with open(filename, mode='w', newline='') as csvfile:
+    #     writer = csv.writer(csvfile)
+    #     writer.writerow(['datetime', 'frequency', 'noise_figure'])
+    #     for freq, nf in noise_figures:
+    #         writer.writerow([datetime.now().isoformat(), freq, nf])
+    # print(f"Noise figures saved to {filename}")
+
+    # for k, i in enumerate(noise_figures):
+    #     print("FREQ:", i[0], " NOISE FIG:", i[1]) 
     
     # rm = pyvisa.ResourceManager()
     # resources = rm.list_resources()
