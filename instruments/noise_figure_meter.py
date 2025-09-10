@@ -54,7 +54,7 @@ class NoiseFigure8970B:
         time.sleep(.2)
 
         # SELECT ENR TABLE
-        self._res.write("RC NR 1 EN NR")
+        self._res.write("RC NR 2 EN NR")
         time.sleep(.2)
 
         self._res.write(f"PL {output_power} EN")
@@ -137,6 +137,8 @@ class NoiseFigure8970B:
 
     def set_and_measure(self, freqs):
         bucket = []
+        self._res.read_termination = ''
+        self._res.write_termination = ''
         for freq in freqs:
             self._res.write(f"FR {freq} EN")
             self._res.write(f"T2 EN")
@@ -174,31 +176,31 @@ class NoiseFigure8970B:
 if __name__ == "__main__":
     noise_figrue = NoiseFigure8970B(visa_address="GPIB0::8::INSTR")
 
-    start = 2000
-    stop = 4000
-    ss = 200
-    output_power = 15
-
-    freqs = list(range(start, stop + ss, ss))
-    freqs = [1900] + freqs
-
-    # start = 18000
-    # stop = 31000
-    # ss = 1000
-    # output_power = 6
+    # start = 2000
+    # stop = 4000
+    # ss = 200
+    # output_power = 15
 
     # freqs = list(range(start, stop + ss, ss))
+    # freqs = [1900] + freqs
 
-    noise_figrue.set_up(1900, stop + ss, ss, output_power)
+    start = 18000
+    stop = 31000
+    ss = 1000
+    output_power = 6
+
+    freqs = list(range(start, stop + ss, ss))
+
+    noise_figrue.set_up(start, stop + ss, ss, output_power)
 
     # noise_figrue.get_noise_power_on_and_off_at_frequencies(freqs)
 
-    noise_figrue.get_noise_temp_on_and_off_at_frequencies(freqs)
+    # noise_figrue.get_noise_temp_on_and_off_at_frequencies(freqs)
 
     # save to a csv the noise figures
 
-    # noise_figures = noise_figrue.set_and_measure(freqs)
-    # print(noise_figures)
+    noise_figures = noise_figrue.set_and_measure(freqs)
+    print(noise_figures)
 
     # filename = f"noise_figures_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     # with open(filename, mode='w', newline='') as csvfile:

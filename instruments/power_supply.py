@@ -25,18 +25,18 @@ class SerialPowerSupply:
 
     def get_voltage(self):
         """Get the voltage"""
-        voltage = float(self.query('MEAS:VOLT?'))
+        voltage = float(self.query('MEAS:VOLT? (@3)'))
         print('Read voltage: %0.2f V' % voltage)
         return voltage
 
     def set_voltage(self, voltage):
         """Set the voltage"""
         print('Set voltage to %0.2f V' % voltage)
-        self.write_cmd(f'VOLT:LEV {voltage}V ')
+        self.write_cmd(f'VOLT:LEV {voltage}V (@3)')
 
     def get_current(self):
         """Get the current"""
-        current = float(self.query('MEAS:CURR?'))
+        current = float(self.query('MEAS:CURR? (@3)'))
 
         print('Read current: %0.2f A' % current)
         return current
@@ -48,19 +48,19 @@ class SerialPowerSupply:
 
     def get_output_state(self):
         """Get output state"""
-        state = int(self.query(b'OUTPut:STATe?')) == 1
+        state = int(self.query(b'OUTPut:STATe? (@3)')) == 1
         print('Read output state: %d' % state)
         return state
 
     def set_output_state(self, state):
         """Set the output state"""
         print('Turning output %s' % self._on_off_str(state))
-        self.write_cmd('OUTPut:STATe %s\n' % self._on_off_str(state))
+        self.write_cmd('OUTPut:STATe %s\n (@3)' % self._on_off_str(state))
 
     def set_overcurrent_protection(self, state):
         """Turn on/off over current protection"""
-        print('Setting over current protection %s' % self._on_off_str(state))
-        self.write_cmd('CURRent:PROTection:STATe %s' % self._on_off_str(state))
+        print('Setting over current protection %s (@3)' % self._on_off_str(state))
+        self.write_cmd('CURRent:PROTection:STATe %s (@3)' % self._on_off_str(state))
 
     def clear_output_protection(self):
         """Clear over current protection"""
@@ -99,18 +99,18 @@ class PowerSupply:
 
     def get_voltage(self):
         """Get the voltage"""
-        voltage = float(self._res.query('MEAS:VOLT?'))
+        voltage = float(self._res.query('MEAS:VOLT? (@3)'))
         print('Read voltage: %0.2f V' % voltage)
         return voltage
 
     def set_voltage(self, voltage):
         """Set the voltage"""
         print('Set voltage to %0.2f V' % voltage)
-        self._res.write(f'VOLT:LEV {voltage}V')
+        self._res.write(f'VOLT:LEV {voltage}V (@3)')
 
     def get_current(self):
         """Get the current"""
-        current = float(self._res.query('MEAS:CURR?'))
+        current = float(self._res.query('MEAS:CURR? (@3)'))
 
         print('Read current: %0.2f A' % current)
         return current
@@ -118,23 +118,23 @@ class PowerSupply:
     def set_current(self, current):
         """Set the current limit"""
         print('Set current limit to %0.2f A' % current)
-        self._res.write(f'CURR:LEV {current}')
+        self._res.write(f'CURR:LEV {current} (@3)')
 
     def get_output_state(self):
         """Get output state"""
-        state = int(self._res.query('OUTPut:STATe?')) == 1
+        state = int(self._res.query('OUTPut:STATe? (@3)')) == 1
         print('Read output state: %d' % state)
         return state
 
     def set_output_state(self, state):
         """Set the output state"""
-        print('Turning output %s' % self._on_off_str(state))
-        self._res.write('OUTPut:STATe %s' % self._on_off_str(state))
+        print('Turning output %s (@3)' % self._on_off_str(state))
+        self._res.write('OUTPut:STATe %s (@3)' % self._on_off_str(state))
 
     def set_overcurrent_protection(self, state):
         """Turn on/off over current protection"""
-        print('Setting over current protection %s' % self._on_off_str(state))
-        self._res.write('CURRent:PROTection:STATe %s' % self._on_off_str(state))
+        print('Setting over current protection %s (@3)' % self._on_off_str(state))
+        self._res.write('CURRent:PROTection:STATe %s (@3)' % self._on_off_str(state))
 
     def clear_output_protection(self):
         """Clear over current protection"""

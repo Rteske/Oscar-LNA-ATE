@@ -122,7 +122,7 @@ class PNAXNetworkAnalyzer:
         self.send_cmd(f"MMEM:LOAD:CSAR '{state_filepath}'")
 
 if __name__ == "__main__":
-    na = PNAXNetworkAnalyzer("TCPIP0::K-Instr0000.local::hislip0::INSTR")
+    na = PNAXNetworkAnalyzer("TCPIP0::K-N5245B-81290.local::5025::SOCKET")
     pwers, freqs = na.calc_and_stream_trace(1, 1)
 
     import csv

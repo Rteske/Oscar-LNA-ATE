@@ -1,4 +1,5 @@
 import time
+import datetime
 
 from configs.calibration import Calibration
 import os
@@ -313,13 +314,13 @@ class PNAXOscarLNAConfig:
             "HIGH_BAND_PATH1": {
                 "Noise_Figure": {
                     "gain_setting": 31,
-                    "switchpath": [[4,1,0,0,0,0], [0,0,0,4,4]],
+                    "switchpath": [[4,1,0,0,0,0], [0,1,2,1,4]],
                     "freqs": [17500, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 317500],
                     "results_filepath": os.path.join(self.data_dir_results, "High Band Noise_Figure_1.csv")
                 },
                 "Gain_Phase": {
                     "gain_setting": 31,
-                    "switchpath": [[1,1,0,0,0,2], [0,0,0,4,2]],
+                    "switchpath": [[1,1,0,0,0,2], [0,0,0,1,2]],
                     "statefile": os.path.join(self.highband_base_dir, "High Band Gain_1.csa"),
                     "results_filepath": [os.path.join(self.data_dir_results, "High Band Gain_1.csv"), os.path.join(self.data_dir_results, "High Band Phase_1.csv")],
                 },
@@ -331,13 +332,13 @@ class PNAXOscarLNAConfig:
                 },
                 "S22": {
                     "gain_setting": 31,
-                    "switchpath": [[1,0,0,0,0,2], [0,0,0,4,2]],
+                    "switchpath": [[1,0,0,0,0,2], [0,0,0,1,2]],
                     "statefile": os.path.join(self.highband_base_dir, "High Band S22_1.csa"),
                     "results_filepath": os.path.join(self.data_dir_results, "High Band S22_1.csv"),
                 },
                 "IP3": {
                     "gain_setting": 31,
-                    "switchpath": [[1,1,0,0,0,2], [0,0,0,4,2]],
+                    "switchpath": [[1,1,0,0,0,2], [0,0,0,1,2]],
                     "statefile": os.path.join(self.highband_base_dir, "High Band IIP3_1.csa"),
                     "results_filepath": os.path.join(self.data_dir_results, "High Band IIP3_1.csv"),
                 },
@@ -357,20 +358,20 @@ class PNAXOscarLNAConfig:
                     "gain_setting": 31,
                     "linear_start_stop": [-45, -40],
                     "saturation_start_stop": [-32, -19],
-                    "switchpath": [[1,1,0,0,0,2], [0,0,0,4,2]],
+                    "switchpath": [[1,1,0,0,0,2], [0,0,0,1,2]],
                     "results_filepath": os.path.join(self.data_dir_results, "High Band Psat_1.csv"),
                 },
             },
             "HIGH_BAND_PATH2": {
                 "Noise_Figure": {
                     "gain_setting": 31,
-                    "switchpath": [[4,2,0,0,0,0], [0,0,0,3,4]],
+                    "switchpath": [[4,2,0,0,0,0], [0,1,2,2,4]],
                     "freqs": [17500, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 317500],
                     "results_filepath": os.path.join(self.data_dir_results, "High Band Noise_Figure_2.csv")
                 },
                 "Gain_Phase": {
                     "gain_setting": 31,
-                    "switchpath": [[1,2,0,0,0,2], [0,0,0,3,2]],
+                    "switchpath": [[1,2,0,0,0,2], [0,0,0,2,2]],
                     "statefile": os.path.join(self.highband_base_dir, "High Band Gain_2.csa"),
                     "results_filepath": [os.path.join(self.data_dir_results, "High Band Gain_2.csv"), os.path.join(self.data_dir_results, "High Band Phase_2.csv")],
                 },
@@ -382,13 +383,13 @@ class PNAXOscarLNAConfig:
                 },
                 "S22": {
                     "gain_setting": 31,
-                    "switchpath": [[1,0,0,0,0,2], [0,0,0,3,2]],
+                    "switchpath": [[1,0,0,0,0,2], [0,0,0,2,2]],
                     "statefile": os.path.join(self.highband_base_dir, "High Band S22_2.csa"),
                     "results_filepath": os.path.join(self.data_dir_results, "High Band S22_2.csv"),
                 },
                 "IP3": {
                     "gain_setting": 31,
-                    "switchpath": [[1,2,0,0,0,2], [0,0,0,3,2]],
+                    "switchpath": [[1,2,0,0,0,2], [0,0,0,2,2]],
                     "statefile": os.path.join(self.highband_base_dir, "High Band IIP3_2.csa"),
                     "results_filepath": os.path.join(self.data_dir_results, "High Band IIP3_2.csv"),
                 },
@@ -406,7 +407,7 @@ class PNAXOscarLNAConfig:
                         "source_range": [-35,-26],
                     },
                     "gain_setting": 31,
-                    "switchpath": [[1,2,0,0,0,2], [0,0,0,3,2]],
+                    "switchpath": [[1,2,0,0,0,2], [0,0,0,2,2]],
                     "linear_start_stop":[-45, -40],
                     "saturation_start_stop":[-32, -19],
                     "results_filepath": os.path.join(self.data_dir_results, "High Band Psat_2.csv"),
@@ -415,7 +416,7 @@ class PNAXOscarLNAConfig:
             "LOW_BAND_PATH1": {
                 "Noise_Figure": {
                     "gain_setting": 31,
-                    "switchpath": [[4,3,0,0,0,0], [0,0,0,4,4]],
+                    "switchpath": [[4,3,0,0,0,0], [0,4,3,4,4]],
                     "freqs":  [1400, 1900, 2000, 2200, 2400, 2600, 2800, 2900, 3000,3200,3400,3600, 3800, 4000, 4500],
                     "results_filepath": os.path.join(self.data_dir_results, "Low Band Noise_Figure_1.csv")
                 },
@@ -466,7 +467,7 @@ class PNAXOscarLNAConfig:
             "LOW_BAND_PATH2": {
                 "Noise_Figure": {
                     "gain_setting": 31,
-                    "switchpath": [[4,4,0,0,0,0], [0,0,0,3,4]],
+                    "switchpath": [[4,4,0,0,0,0], [0,4,3,3,4]],
                     "freqs": [1400, 1900, 2000, 2200, 2400, 2600, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4500],
                     "results_filepath": os.path.join(self.data_dir_results, "Low Band Noise_Figure_2.csv")
                 },

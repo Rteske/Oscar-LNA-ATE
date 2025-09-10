@@ -1,4 +1,5 @@
 import time
+import datetime
 
 from configs.calibration import Calibration
 import os
@@ -314,7 +315,7 @@ class PNAXOscarLNAConfig:
                 "Noise_Figure": {
                     "gain_setting": 31,
                     "switchpath": [[4,1,0,0,0,0], [0,0,0,4,4]],
-                    "freqs": [17500, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 317500],
+                    "freqs": [18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000],
                     "results_filepath": os.path.join(self.data_dir_results, "High Band Noise_Figure_1.csv")
                 },
                 "Gain_Phase": {
@@ -365,7 +366,7 @@ class PNAXOscarLNAConfig:
                 "Noise_Figure": {
                     "gain_setting": 31,
                     "switchpath": [[4,2,0,0,0,0], [0,0,0,3,4]],
-                    "freqs": [17500, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 317500],
+                    "freqs": [18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000],
                     "results_filepath": os.path.join(self.data_dir_results, "High Band Noise_Figure_2.csv")
                 },
                 "Gain_Phase": {

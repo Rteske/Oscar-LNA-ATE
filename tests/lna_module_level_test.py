@@ -3,7 +3,6 @@ import time
 from instruments.power_meter import E4418BPowerMeter, GigatronixPowerMeter
 from instruments.signal_generator import SynthesizedCWGenerator, E4438CSignalGenerator
 from instruments.power_supply import PowerSupply
-from instruments.daq import RS422_DAQ
 from instruments.temp_probe import DracalTempProbe, Agilent34401A
 from configs.calibration import Calibration
 from instruments.temp_controller import TempController
@@ -20,7 +19,7 @@ import logging
 import os
 
 class RfTest:
-    def __init__(self, rfpm1_input="SIM", rfpm2_output="SIM", rfsg="SIM", psu="SIM", daq="SIM", temp_probe="SIM", temp_probe2="SIM", temp_controller="SIM", sno="SIM", switch_bank="SIM", switch_bank2="SIM", na="SIM"):
+    def __init__(self, rfpm1_input="SIM", rfpm2_output="SIM", rfsg="SIM", psu="SIM", temp_probe="SIM", temp_probe2="SIM", temp_controller="SIM", sno="SIM", switch_bank="SIM", switch_bank2="SIM", na="SIM"):
         self.logger = logging.getLogger("Test")
         self.logger.setLevel(logging.DEBUG)
         
@@ -28,7 +27,7 @@ class RfTest:
         self.name = ""
 
 class NetworkAnalyzerTest(RfTest):
-    def __init__(self, na="SIM", psu="SIM", daq="SIM", temp_probe="SIM", temp_probe2="SIM", sno="SIM", switch_bank="SIM", switch_bank2="SIM", config="SIM"):
+    def __init__(self, na="SIM", psu="SIM", temp_probe="SIM", temp_probe2="SIM", sno="SIM", switch_bank="SIM", switch_bank2="SIM", config="SIM"):
         if isinstance(na, PNAXNetworkAnalyzer):
             self.na = na
         else:
@@ -39,12 +38,6 @@ class NetworkAnalyzerTest(RfTest):
         else:
             raise TypeError()
         
-        if isinstance(daq, RS422_DAQ):
-            self.daq = daq
-        elif isinstance(daq, Aiousb):
-            self.daq = daq
-        else:
-            raise TypeError
         
         if isinstance(temp_probe, Agilent34401A):
             self.temp_probe = temp_probe
@@ -86,8 +79,8 @@ class NetworkAnalyzerTest(RfTest):
         self.temp_probe2 = Agilent34401A("GPIB0::22::INSTR")
 
 class NetworkAnalyzerModuleTest(NetworkAnalyzerTest):
-    def __init__(self, na="SIM", psu="SIM", daq="SIM", temp_probe="SIM", temp_probe2="SIM", sno="SIM", switch_bank="SIM", switch_bank2="SIM", config="SIM"):
-        super().__init__(na, psu, daq, temp_probe, temp_probe2, sno, switch_bank, switch_bank2, config)
+    def __init__(self, na="SIM", psu="SIM", temp_probe="SIM", temp_probe2="SIM", sno="SIM", switch_bank="SIM", switch_bank2="SIM", config="SIM"):
+        super().__init__(na, psu, temp_probe, temp_probe2, sno, switch_bank, switch_bank2, config)
         self.name = "Network Analyzer Standard Test"
 
     def set_up_measurement(self, switchpath, gain_setting, statefilepath):
@@ -98,15 +91,12 @@ class NetworkAnalyzerModuleTest(NetworkAnalyzerTest):
 
         self.na.load_saved_cal_and_state(statefilepath)
 
-        self.daq.enable_rf()
-        self.daq.set_attenuation(gain_setting)
         print("Completed setting up measurement")
         time.sleep(2)
 
     def clean_up_measurement(self):
         self.switch_bank.reset_all_switches()
         self.switch_bank2.reset_all_switches()
-        self.daq.disable_rf()
 
     def get_gain_measurement(self, path, gain_setting, measurement_type):
         switchpath, statefile = self.config.get_switchpath_and_statefile_by_path_and_measurement_type(path, measurement_type)
@@ -238,7 +228,7 @@ class NetworkAnalyzerModuleTest(NetworkAnalyzerTest):
         return bucket 
 
 class SignalAnalyzerTest(RfTest):
-    def __init__(self, rfpm2_input="SIM", rfpm1_output="SIM" , rfsa="SIM", rfsg="SIM", psu="SIM", daq="SIM", temp_probe="SIM", temp_probe2="SIM", sno="SIM", switch_bank="SIM", config="SIM"):
+    def __init__(self, rfpm2_input="SIM", rfpm1_output="SIM" , rfsa="SIM", rfsg="SIM", psu="SIM", temp_probe="SIM", temp_probe2="SIM", sno="SIM", switch_bank="SIM", config="SIM"):
         if isinstance(rfpm2_input, E4418BPowerMeter):
             self.rfpm2_input = rfpm2_input
             # self.logger.debug("Succesfully connected to rfpm1 (E4418BPowerMeter)")
@@ -267,12 +257,6 @@ class SignalAnalyzerTest(RfTest):
         else:
             raise TypeError()
         
-
-        if isinstance(daq, Aiousb):
-            self.daq = daq
-        else:
-            raise TypeError
-        
         if isinstance(temp_probe, Agilent34401A):
             self.temp_probe = temp_probe
         else:
@@ -297,8 +281,8 @@ class SignalAnalyzerTest(RfTest):
         self.name = ""
 
 class BandwithPowerModuleTest(SignalAnalyzerTest):
-    def __init__(self, rfpm1="SIM", rfpm2="SIM", rfsg="SIM", psu="SIM", daq="SIM", temp_probe="SIM", temp_probe2="SIM", sno="SIM", switch_bank="SIM", config="SIM", rfsa="SIM"): 
-        super().__init__(rfpm2_input=rfpm2, rfpm1_output=rfpm1, rfsg=rfsg, rfsa=rfsa, psu=psu, daq=daq, temp_probe=temp_probe, temp_probe2=temp_probe2, sno=sno, switch_bank=switch_bank, config=config) 
+    def __init__(self, rfpm1="SIM", rfpm2="SIM", rfsg="SIM", psu="SIM", temp_probe="SIM", temp_probe2="SIM", sno="SIM", switch_bank="SIM", config="SIM", rfsa="SIM"): 
+        super().__init__(rfpm2_input=rfpm2, rfpm1_output=rfpm1, rfsg=rfsg, rfsa=rfsa, psu=psu, temp_probe=temp_probe, temp_probe2=temp_probe2, sno=sno, switch_bank=switch_bank, config=config) 
 
     def set_up_measurement(self, frequency, switchpath, gain_setting, waveform):
         if waveform == "CW":
@@ -307,10 +291,6 @@ class BandwithPowerModuleTest(SignalAnalyzerTest):
             self.rfsg.select_demod_filter(waveform)
             self.rfsg.enable_modulation("ON")
 
-        self.daq.enable_rf()
-
-
-        self.daq.set_attenuation(gain_setting)
         print("Completed setting up measurement")
 
     def input_power_validation(self, frequency, target_power, start_power, input_loss):
@@ -360,7 +340,6 @@ class BandwithPowerModuleTest(SignalAnalyzerTest):
     
     def clean_up_measurement(self):
         self.rfsg.stop()
-        self.daq.disable_rf()
         self.switch_bank.reset_all_switches()
 
     def get_bandwidth_by_frequency_and_switchpath(self, switchpath, frequency):
@@ -421,7 +400,6 @@ class BandwithPowerModuleTest(SignalAnalyzerTest):
                 if waveform == "CW" and gain_setting == 0:
                     time.sleep(4)
 
-                    self.daq.set_attenuation(gain_setting)
                     start_stop = self.config.harmonic_measurement_bandwidths[bandpath]
                     date_string = datetime.datetime.now()
                     span = int(start_stop[1]) - int(start_stop[0])
@@ -462,7 +440,3 @@ class BandwithPowerModuleTest(SignalAnalyzerTest):
         print(f"Probe Temp Value 2: {probe_temp_value2}")
 
         return probe_temp_value, probe_temp_value2
-
-
-
-class SignalAnalyzerModuleTest()

@@ -13,7 +13,7 @@ logger = logging.getLogger()
 
 class LNAModuleTestManager:
     def __init__(self, sim) -> None:
-        self.instruments_connection = {"na": True, "temp_probe": True, "daq": True}
+        self.instruments_connection = {"na": True, "temp_probe": True}
         if not sim:
             self.rm = pyvisa.ResourceManager()
             self.instruments = self.rm.list_resources()
@@ -22,7 +22,7 @@ class LNAModuleTestManager:
             self.state = False
 
             try:
-                self.na = PNAXNetworkAnalyzer("TCPIP0::K-Instr0000.local::hislip0::INSTR")
+                self.na = PNAXNetworkAnalyzer("TCPIP0::K-N5245B-81290.local::inst0::INSTR")
                 log_message("NA CONNECTED")
             except:
                 self.instruments_connection["na"] = False
@@ -50,17 +50,11 @@ class LNAModuleTestManager:
                 self.instruments_connection["power_supply"] = False
 
             try:
-                self.daq = Aiousb()
-            except:
-                log_message("FAILED TO CONNECT TO AIOUSB")
-                self.instruments_connection["daq"] = False
-
-            try:
-                sno = "02402230028"
+                sno = "02501090022"
                 self.switch_bank = ZtmModular()
                 self.switch_bank.init_resource(sno)
                 self.switch_bank.reset_all_switches()
-                sno = "01905230039"
+                sno = "02501090021"
                 self.switch_bank2 = ZtmModular()
                 self.switch_bank2.init_resource(sno)
                 self.switch_bank2.reset_all_switches()
@@ -75,7 +69,7 @@ class LNAModuleTestManager:
             network_analyzer_config = PNAXOscarLNAConfig("OSCAR_LNA")
             from tests.lna_module_level_test import NetworkAnalyzerModuleTest
 
-            self.na_test = NetworkAnalyzerModuleTest(na=self.na, temp_probe=self.temp_probe, temp_probe2=self.temp_probe2, daq=self.daq, psu=self.power_supply, config=network_analyzer_config, switch_bank=self.switch_bank, switch_bank2=self.switch_bank2)
+            self.na_test = NetworkAnalyzerModuleTest(na=self.na, temp_probe=self.temp_probe, temp_probe2=self.temp_probe2, psu=self.power_supply, config=network_analyzer_config, switch_bank=self.switch_bank, switch_bank2=self.switch_bank2)
 
             self.freqs_and_switchpaths_na_tests = {}
 
@@ -89,7 +83,6 @@ class LNAModuleTestManager:
             self.scribe = Scribe("OSCAR_LNA")
 
     def clean_up(self):
-        self.daq.disable_rf()
         # self.power_supply.get_output_state(False)
         self.switch_bank.reset_all_switches()
         self.switch_bank2.reset_all_switches()
