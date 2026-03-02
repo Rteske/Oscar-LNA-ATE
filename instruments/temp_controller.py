@@ -3,7 +3,7 @@ import time
 
 class TempController:
     def __init__(self):
-        port = "COM5"
+        port = "COM3"
         self.connector = DtechRS232(port)
 
     def set_setpoint(self, channel, value):

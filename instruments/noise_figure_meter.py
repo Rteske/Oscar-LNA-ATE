@@ -54,7 +54,7 @@ class NoiseFigure8970B:
         time.sleep(.2)
 
         # SELECT ENR TABLE
-        self._res.write("RC NR 2 EN NR")
+        self._res.write("RC NR 2 EN NR EN")
         time.sleep(.2)
 
         self._res.write(f"PL {output_power} EN")

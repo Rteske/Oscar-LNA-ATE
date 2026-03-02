@@ -417,7 +417,7 @@ class PNAXOscarLNAConfig:
                 "Noise_Figure": {
                     "gain_setting": 31,
                     "switchpath": [[4,3,0,0,0,0], [0,0,0,4,4]],
-                    "freqs":  [1400, 1900, 2000, 2200, 2400, 2600, 2800, 2900, 3000,3200,3400,3600, 3800, 4000, 4500],
+                    "freqs":  [1400, 1900, 2000, 2200, 2400, 2600, 2800, 3000, 3200, 3400, 3600, 3800, 4000, 4500],
                     "results_filepath": os.path.join(self.data_dir_results, "Low Band Noise_Figure_1.csv")
                 },
                 "Gain_Phase": {
@@ -468,7 +468,7 @@ class PNAXOscarLNAConfig:
                 "Noise_Figure": {
                     "gain_setting": 31,
                     "switchpath": [[4,4,0,0,0,0], [0,0,0,3,4]],
-                    "freqs": [1400, 1900, 2000, 2200, 2400, 2600, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4500],
+                    "freqs": [1400, 1900, 2000, 2200, 2400, 2600, 2800, 3000, 3200, 3400, 3600, 3800, 4000, 4500],
                     "results_filepath": os.path.join(self.data_dir_results, "Low Band Noise_Figure_2.csv")
                 },
                 "Gain_Phase": {
